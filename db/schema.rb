@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_09_16_102726) do
+ActiveRecord::Schema[8.0].define(version: 2026_09_16_132123) do
   create_table "appearances", force: :cascade do |t|
     t.integer "game_id", null: false
     t.integer "player_id", null: false
@@ -40,6 +40,15 @@ ActiveRecord::Schema[8.0].define(version: 2026_09_16_102726) do
     t.boolean "active", default: true, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "photo_url"
+    t.integer "technique", default: 5, null: false
+    t.integer "passing", default: 5, null: false
+    t.integer "finishing", default: 5, null: false
+    t.integer "defense", default: 5, null: false
+    t.integer "positioning", default: 5, null: false
+    t.integer "pace", default: 5, null: false
+    t.integer "stamina", default: 5, null: false
+    t.integer "teamwork", default: 5, null: false
   end
 
   add_foreign_key "appearances", "games"

@@ -1,7 +1,7 @@
 class PlayersController < ApplicationController
   before_action :set_player, only: %i[ show edit update destroy ]
 
-  SORTABLE_COLUMNS = %w[name games goals].freeze
+  SORTABLE_COLUMNS = %w[name games goals overall].freeze
 
   def index
     @sort = SORTABLE_COLUMNS.include?(params[:sort]) ? params[:sort] : "name"
@@ -11,6 +11,7 @@ class PlayersController < ApplicationController
     sorted = case @sort
     when "games" then players.sort_by(&:games_played)
     when "goals" then players.sort_by(&:goals_scored)
+    when "overall" then players.sort_by(&:overall_rating)
     else players.sort_by { |player| player.name.downcase }
     end
     sorted.reverse! if @direction == "desc"
@@ -71,6 +72,6 @@ class PlayersController < ApplicationController
   end
 
   def player_params
-    params.require(:player).permit(:name, :active)
+    params.require(:player).permit(:name, :active, :photo_url, *Player::SKILLS.keys)
   end
 end

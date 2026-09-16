@@ -1,20 +1,25 @@
 <%
+  player = f.object.player
   zone = { "team_one" => "teamOne", "team_two" => "teamTwo" }.fetch(f.object.team, "bench")
-  initials = f.object.player.name.split.map { |part| part[0] }.join.upcase.first(2)
 %>
 <div class="flex w-20 shrink-0 touch-none select-none flex-col items-center gap-1 rounded-lg bg-white/95 px-2 py-2 text-center shadow cursor-grab active:cursor-grabbing dark:bg-gray-800/95"
      draggable="false"
      tabindex="0"
      data-roster-target="card"
      data-zone="<%= zone %>"
+     data-skills="<%= player.skills.values.to_json %>"
      data-action="pointerdown->roster#startDrag keydown.enter->roster#cycleOnKey keydown.space->roster#cycleOnKey">
   <%= f.hidden_field :player_id %>
   <%= f.hidden_field :team, data: { role: "team-field" } %>
 
-  <div class="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-600 text-xs font-bold text-white dark:bg-emerald-500">
-    <%= initials %>
+  <div class="h-8 w-8 overflow-hidden rounded-full bg-emerald-600 dark:bg-emerald-500">
+    <% if player.photo_url.present? %>
+      <%= image_tag player.photo_url, class: "h-full w-full object-cover", alt: player.name %>
+    <% else %>
+      <div class="flex h-full w-full items-center justify-center text-xs font-bold text-white"><%= player.initials %></div>
+    <% end %>
   </div>
-  <div class="w-full truncate text-xs font-medium text-gray-800 dark:text-gray-100"><%= f.object.player.name %></div>
+  <div class="w-full truncate text-xs font-medium text-gray-800 dark:text-gray-100"><%= player.name %></div>
 
   <div class="flex items-center gap-1 text-xs" data-role="goal-stepper" <%= "hidden" if zone == "bench" %>>
     <button type="button" class="flex h-5 w-5 items-center justify-center rounded bg-gray-100 font-bold text-gray-600 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600" data-action="click->roster#decrementGoals">−</button>

@@ -3,6 +3,23 @@ import { Controller } from "@hotwired/stimulus"
 const ZONE_TEAM = { bench: "", teamOne: "team_one", teamTwo: "team_two" }
 const ZONE_ORDER = ["bench", "teamOne", "teamTwo"]
 
+const RADAR_CENTER = 150
+const RADAR_RADIUS = 100
+const RADAR_MAX = 10
+const SKILL_COUNT = 8
+
+function radarPolygonPoints(values) {
+  return values
+    .map((value, i) => {
+      const angle = ((-90 + i * (360 / values.length)) * Math.PI) / 180
+      const distance = RADAR_RADIUS * (value / RADAR_MAX)
+      const x = RADAR_CENTER + distance * Math.cos(angle)
+      const y = RADAR_CENTER + distance * Math.sin(angle)
+      return `${x.toFixed(1)},${y.toFixed(1)}`
+    })
+    .join(" ")
+}
+
 export default class extends Controller {
   static targets = [
     "card",
@@ -14,13 +31,16 @@ export default class extends Controller {
     "teamTwoTopRow",
     "teamTwoBottomRow",
     "teamOneCount",
-    "teamTwoCount"
+    "teamTwoCount",
+    "teamOneRadar",
+    "teamTwoRadar"
   ]
 
   connect() {
     this.redistributeRows("teamOne")
     this.redistributeRows("teamTwo")
     this.updateCounts()
+    this.updateRadar()
     // Stable references so add/removeEventListener always agree on identity,
     // and a window-level safety net in case a card's own pointerup never fires
     // (e.g. capture lost mid-drag) — without it a card can get stuck floating.
@@ -131,6 +151,7 @@ export default class extends Controller {
     this.redistributeRows("teamOne")
     this.redistributeRows("teamTwo")
     this.updateCounts()
+    this.updateRadar()
   }
 
   // Splits a team's cards across its two rows (top row gets the smaller
@@ -173,5 +194,22 @@ export default class extends Controller {
   updateCounts() {
     this.teamOneCountTarget.textContent = this.teamOneZoneTarget.querySelectorAll('[data-roster-target="card"]').length
     this.teamTwoCountTarget.textContent = this.teamTwoZoneTarget.querySelectorAll('[data-roster-target="card"]').length
+  }
+
+  updateRadar() {
+    if (!this.hasTeamOneRadarTarget) return
+    this.teamOneRadarTarget.setAttribute("points", radarPolygonPoints(this.averageSkills(this.teamOneZoneTarget)))
+    this.teamTwoRadarTarget.setAttribute("points", radarPolygonPoints(this.averageSkills(this.teamTwoZoneTarget)))
+  }
+
+  averageSkills(zone) {
+    const cards = [...zone.querySelectorAll('[data-roster-target="card"]')]
+    const sums = new Array(SKILL_COUNT).fill(0)
+    if (cards.length === 0) return sums
+
+    cards.forEach((card) => {
+      JSON.parse(card.dataset.skills).forEach((value, i) => { sums[i] += value })
+    })
+    return sums.map((sum) => sum / cards.length)
   }
 }

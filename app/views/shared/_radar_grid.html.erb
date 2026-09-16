@@ -1,0 +1,12 @@
+<% rings = [2, 4, 6, 8, 10] %>
+<% rings.each do |level| %>
+  <polygon points="<%= radar_polygon_points(Array.new(labels.size, level)) %>" fill="none" stroke="currentColor" class="text-gray-200 dark:text-gray-700" stroke-width="1"/>
+<% end %>
+<% labels.each_index do |i| %>
+  <% x, y = radar_point(i, labels.size, 10).split(",").map(&:to_f) %>
+  <line x1="150" y1="150" x2="<%= x %>" y2="<%= y %>" stroke="currentColor" class="text-gray-200 dark:text-gray-700" stroke-width="1"/>
+<% end %>
+<% labels.each_with_index do |label, i| %>
+  <% x, y = radar_point(i, labels.size, 12.5).split(",").map(&:to_f) %>
+  <text x="<%= x %>" y="<%= y %>" text-anchor="middle" dominant-baseline="middle" class="fill-gray-500 dark:fill-gray-400" font-size="10"><%= label %></text>
+<% end %>
