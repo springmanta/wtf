@@ -3,8 +3,8 @@
   zone = { "team_one" => "teamOne", "team_two" => "teamTwo" }.fetch(f.object.team, "bench")
   zone_bg = {
     "bench" => "bg-white/95 dark:bg-gray-800/95",
-    "teamOne" => "bg-emerald-100 dark:bg-emerald-900/60",
-    "teamTwo" => "bg-sky-100 dark:bg-sky-900/60"
+    "teamOne" => "bg-emerald-100 dark:bg-emerald-600",
+    "teamTwo" => "bg-sky-100 dark:bg-sky-600"
   }.fetch(zone)
 %>
 <div class="flex w-20 shrink-0 touch-none select-none flex-col items-center gap-1 rounded-lg <%= zone_bg %> px-2 py-2 text-center shadow cursor-grab active:cursor-grabbing"

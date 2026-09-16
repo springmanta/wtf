@@ -6,8 +6,8 @@ const STATS = ["goals", "assists"]
 
 const ZONE_CARD_CLASSES = {
   bench: ["bg-white/95", "dark:bg-gray-800/95"],
-  teamOne: ["bg-emerald-100", "dark:bg-emerald-900/60"],
-  teamTwo: ["bg-sky-100", "dark:bg-sky-900/60"]
+  teamOne: ["bg-emerald-100", "dark:bg-emerald-600"],
+  teamTwo: ["bg-sky-100", "dark:bg-sky-600"]
 }
 const ALL_ZONE_CARD_CLASSES = Object.values(ZONE_CARD_CLASSES).flat()
 
