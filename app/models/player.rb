@@ -1,6 +1,7 @@
 class Player < ApplicationRecord
   has_many :appearances, dependent: :destroy
   has_many :games, through: :appearances
+  has_many :skill_snapshots, -> { order(:recorded_at) }, class_name: "PlayerSkillSnapshot", dependent: :destroy
   has_one_attached :photo
 
   SKILLS = {
@@ -56,6 +57,10 @@ class Player < ApplicationRecord
 
   def overall_rating
     skills.values.sum.fdiv(SKILLS.size).round(1)
+  end
+
+  def record_skill_snapshot!
+    skill_snapshots.create!(skills.merge(recorded_at: Time.current))
   end
 
   def initials

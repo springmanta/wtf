@@ -1,0 +1,24 @@
+<% snapshots = player.skill_snapshots.to_a %>
+<% if snapshots.size < 2 %>
+  <p class="text-sm text-gray-500 dark:text-gray-400">Not enough history yet — this fills in as skills are updated over time.</p>
+<% else %>
+  <% ratings = snapshots.map(&:overall_rating) %>
+  <svg viewBox="0 0 500 160" class="w-full">
+    <% [0, 5, 10].each do |level| %>
+      <% _, y = line_chart_coordinates([level]).first %>
+      <line x1="20" y1="<%= y %>" x2="480" y2="<%= y %>" stroke="currentColor" class="text-gray-200 dark:text-gray-700" stroke-width="1"/>
+      <text x="12" y="<%= y %>" font-size="9" text-anchor="end" dominant-baseline="middle" class="fill-gray-400 dark:fill-gray-500"><%= level %></text>
+    <% end %>
+
+    <polyline points="<%= line_chart_points(ratings) %>" fill="none" stroke="currentColor"
+              class="text-emerald-600 dark:text-emerald-400" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+
+    <% line_chart_coordinates(ratings).each do |x, y| %>
+      <circle cx="<%= x %>" cy="<%= y %>" r="3.5" fill="currentColor" class="text-emerald-600 dark:text-emerald-400"/>
+    <% end %>
+  </svg>
+  <div class="mt-1 flex justify-between text-xs text-gray-400 dark:text-gray-500">
+    <span><%= snapshots.first.recorded_at.strftime("%d %b %Y") %></span>
+    <span><%= snapshots.last.recorded_at.strftime("%d %b %Y") %></span>
+  </div>
+<% end %>

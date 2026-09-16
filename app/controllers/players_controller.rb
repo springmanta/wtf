@@ -32,6 +32,7 @@ class PlayersController < ApplicationController
     @player = Player.new(player_params)
 
     if @player.save
+      @player.record_skill_snapshot!
       redirect_to @player, notice: "Player was successfully created."
     else
       render :new, status: :unprocessable_entity
@@ -40,6 +41,7 @@ class PlayersController < ApplicationController
 
   def update
     if @player.update(player_params)
+      @player.record_skill_snapshot! if skills_changed?
       redirect_to @player, notice: "Player was successfully updated."
     else
       render :edit, status: :unprocessable_entity
@@ -75,6 +77,10 @@ class PlayersController < ApplicationController
 
   def set_player
     @player = Player.includes(appearances: :game).find(params[:id])
+  end
+
+  def skills_changed?
+    (@player.saved_changes.keys.map(&:to_sym) & Player::SKILLS.keys).any?
   end
 
   def player_params

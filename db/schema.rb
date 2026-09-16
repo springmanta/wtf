@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_09_16_133259) do
+ActiveRecord::Schema[8.0].define(version: 2026_09_16_152013) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -63,6 +63,23 @@ ActiveRecord::Schema[8.0].define(version: 2026_09_16_133259) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "player_skill_snapshots", force: :cascade do |t|
+    t.integer "player_id", null: false
+    t.integer "technique", null: false
+    t.integer "passing", null: false
+    t.integer "finishing", null: false
+    t.integer "defense", null: false
+    t.integer "positioning", null: false
+    t.integer "pace", null: false
+    t.integer "stamina", null: false
+    t.integer "teamwork", null: false
+    t.datetime "recorded_at", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["player_id", "recorded_at"], name: "index_player_skill_snapshots_on_player_id_and_recorded_at"
+    t.index ["player_id"], name: "index_player_skill_snapshots_on_player_id"
+  end
+
   create_table "players", force: :cascade do |t|
     t.string "name", null: false
     t.boolean "active", default: true, null: false
@@ -82,4 +99,5 @@ ActiveRecord::Schema[8.0].define(version: 2026_09_16_133259) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "appearances", "games"
   add_foreign_key "appearances", "players"
+  add_foreign_key "player_skill_snapshots", "players"
 end
