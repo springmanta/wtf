@@ -6,31 +6,31 @@
 </div>
 
 <% if @players.empty? %>
-  <p class="text-gray-500">No players yet.</p>
+  <p class="text-gray-500 dark:text-gray-400">No players yet.</p>
 <% else %>
-  <div class="overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm">
-    <table class="min-w-full divide-y divide-gray-200 text-sm">
-      <thead class="bg-gray-50">
+  <div class="overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-900">
+    <table class="min-w-full divide-y divide-gray-200 text-sm dark:divide-gray-800">
+      <thead class="bg-gray-50 dark:bg-gray-800">
         <tr>
-          <th class="px-4 py-2 text-left font-medium text-gray-500">Name</th>
-          <th class="px-4 py-2 text-left font-medium text-gray-500">Games</th>
-          <th class="px-4 py-2 text-left font-medium text-gray-500">Goals</th>
-          <th class="px-4 py-2 text-left font-medium text-gray-500">Status</th>
+          <th class="px-4 py-2 text-left font-medium text-gray-500 dark:text-gray-400">Name</th>
+          <th class="px-4 py-2 text-left font-medium text-gray-500 dark:text-gray-400">Games</th>
+          <th class="px-4 py-2 text-left font-medium text-gray-500 dark:text-gray-400">Goals</th>
+          <th class="px-4 py-2 text-left font-medium text-gray-500 dark:text-gray-400">Status</th>
         </tr>
       </thead>
-      <tbody class="divide-y divide-gray-100">
+      <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
         <% @players.each do |player| %>
-          <tr class="hover:bg-gray-50">
+          <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/50">
             <td class="px-4 py-2">
-              <%= link_to player.name, player, class: "font-medium text-emerald-700 hover:underline" %>
+              <%= link_to player.name, player, class: "font-medium text-emerald-700 hover:underline dark:text-emerald-400" %>
             </td>
-            <td class="px-4 py-2 text-gray-600"><%= player.games_played %></td>
-            <td class="px-4 py-2 text-gray-600"><%= player.goals_scored %></td>
+            <td class="px-4 py-2 text-gray-600 dark:text-gray-300"><%= player.games_played %></td>
+            <td class="px-4 py-2 text-gray-600 dark:text-gray-300"><%= player.goals_scored %></td>
             <td class="px-4 py-2">
               <% if player.active %>
-                <span class="rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-medium text-emerald-700">Active</span>
+                <span class="rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-medium text-emerald-700 dark:bg-emerald-900 dark:text-emerald-300">Active</span>
               <% else %>
-                <span class="rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-500">Inactive</span>
+                <span class="rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-500 dark:bg-gray-800 dark:text-gray-400">Inactive</span>
               <% end %>
             </td>
           </tr>

@@ -1,41 +1,44 @@
 <% content_for :title, "#{@game.played_on.strftime("%d %b %Y")} game" %>
 
 <div class="mb-6 flex items-center justify-between">
-  <%= link_to "← All games", games_path, class: "text-sm text-emerald-700 hover:underline" %>
+  <%= link_to "← All games", games_path, class: "text-sm text-emerald-700 hover:underline dark:text-emerald-400" %>
   <div class="flex gap-3">
-    <%= link_to "Edit", edit_game_path(@game), class: "text-sm text-gray-600 hover:underline" %>
+    <%= link_to "Edit", edit_game_path(@game), class: "text-sm text-gray-600 hover:underline dark:text-gray-300" %>
     <%= button_to "Delete", game_path(@game), method: :delete,
-          class: "text-sm text-red-600 hover:underline",
+          class: "text-sm text-red-600 hover:underline dark:text-red-400",
           form: { data: { turbo_confirm: "Delete this game?" } } %>
   </div>
 </div>
 
-<div class="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-  <div class="text-center text-sm text-gray-500"><%= @game.played_on.strftime("%A %d %B %Y") %></div>
+<div class="rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-900">
+  <div class="text-center text-sm text-gray-500 dark:text-gray-400"><%= @game.played_on.strftime("%A %d %B %Y") %></div>
   <% if @game.location.present? %>
-    <div class="text-center text-sm text-gray-400">📍 <%= @game.location %></div>
+    <div class="text-center text-sm text-gray-400 dark:text-gray-500">📍 <%= @game.location %></div>
   <% end %>
 
   <div class="mt-4 flex items-center justify-center gap-6 text-2xl font-bold">
     <span><%= @game.team_one_name %></span>
-    <span class="rounded bg-gray-100 px-4 py-2 font-mono"><%= @game.team_one_score %> - <%= @game.team_two_score %></span>
+    <span class="rounded bg-gray-100 px-4 py-2 font-mono dark:bg-gray-800"><%= @game.team_one_score %> - <%= @game.team_two_score %></span>
     <span><%= @game.team_two_name %></span>
   </div>
-  <div class="mt-1 text-center text-sm font-medium text-gray-500"><%= @game.result_summary %></div>
+  <div class="mt-1 text-center text-sm font-medium text-gray-500 dark:text-gray-400"><%= @game.result_summary %></div>
 
   <% if @game.notes.present? %>
-    <p class="mt-4 rounded-md bg-gray-50 p-3 text-sm text-gray-600"><%= @game.notes %></p>
+    <p class="mt-4 rounded-md bg-gray-50 p-3 text-sm text-gray-600 dark:bg-gray-800 dark:text-gray-300"><%= @game.notes %></p>
   <% end %>
 
   <div class="mt-8 grid grid-cols-1 gap-8 sm:grid-cols-2">
     <div>
-      <h2 class="mb-2 font-semibold text-gray-700"><%= @game.team_one_name %></h2>
-      <ul class="divide-y divide-gray-100 rounded-md border border-gray-100">
+      <h2 class="mb-2 font-semibold text-gray-700 dark:text-gray-200">
+        <%= @game.team_one_name %>
+        <span class="font-normal text-gray-400 dark:text-gray-500">(<%= pluralize(@game.team_one_appearances.size, "player") %>)</span>
+      </h2>
+      <ul class="divide-y divide-gray-100 rounded-md border border-gray-100 dark:divide-gray-800 dark:border-gray-800">
         <% @game.team_one_appearances.each do |appearance| %>
           <li class="flex items-center justify-between px-3 py-2 text-sm">
             <span><%= appearance.player.name %></span>
             <% if appearance.goals > 0 %>
-              <span class="text-gray-500">⚽ × <%= appearance.goals %></span>
+              <span class="text-gray-500 dark:text-gray-400">⚽ × <%= appearance.goals %></span>
             <% end %>
           </li>
         <% end %>
@@ -43,13 +46,16 @@
     </div>
 
     <div>
-      <h2 class="mb-2 font-semibold text-gray-700"><%= @game.team_two_name %></h2>
-      <ul class="divide-y divide-gray-100 rounded-md border border-gray-100">
+      <h2 class="mb-2 font-semibold text-gray-700 dark:text-gray-200">
+        <%= @game.team_two_name %>
+        <span class="font-normal text-gray-400 dark:text-gray-500">(<%= pluralize(@game.team_two_appearances.size, "player") %>)</span>
+      </h2>
+      <ul class="divide-y divide-gray-100 rounded-md border border-gray-100 dark:divide-gray-800 dark:border-gray-800">
         <% @game.team_two_appearances.each do |appearance| %>
           <li class="flex items-center justify-between px-3 py-2 text-sm">
             <span><%= appearance.player.name %></span>
             <% if appearance.goals > 0 %>
-              <span class="text-gray-500">⚽ × <%= appearance.goals %></span>
+              <span class="text-gray-500 dark:text-gray-400">⚽ × <%= appearance.goals %></span>
             <% end %>
           </li>
         <% end %>

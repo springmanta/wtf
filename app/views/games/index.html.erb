@@ -6,22 +6,22 @@
 </div>
 
 <% if @games.empty? %>
-  <p class="text-gray-500">No games recorded yet.</p>
+  <p class="text-gray-500 dark:text-gray-400">No games recorded yet.</p>
 <% else %>
   <div class="space-y-3">
     <% @games.each do |game| %>
-      <%= link_to game_path(game), class: "block rounded-lg border border-gray-200 bg-white p-4 shadow-sm hover:border-emerald-400" do %>
+      <%= link_to game_path(game), class: "block rounded-lg border border-gray-200 bg-white p-4 shadow-sm hover:border-emerald-400 dark:border-gray-800 dark:bg-gray-900 dark:hover:border-emerald-600" do %>
         <div class="flex items-center justify-between">
-          <span class="text-sm text-gray-500"><%= game.played_on.strftime("%a %d %b %Y") %></span>
-          <span class="text-xs font-medium text-gray-400"><%= game.result_summary %></span>
+          <span class="text-sm text-gray-500 dark:text-gray-400"><%= game.played_on.strftime("%a %d %b %Y") %></span>
+          <span class="text-xs font-medium text-gray-400 dark:text-gray-500"><%= game.result_summary %></span>
         </div>
         <div class="mt-2 flex items-center justify-center gap-4 text-lg font-semibold">
           <span><%= game.team_one_name %></span>
-          <span class="rounded bg-gray-100 px-3 py-1 font-mono text-xl"><%= game.team_one_score %> - <%= game.team_two_score %></span>
+          <span class="rounded bg-gray-100 px-3 py-1 font-mono text-xl dark:bg-gray-800"><%= game.team_one_score %> - <%= game.team_two_score %></span>
           <span><%= game.team_two_name %></span>
         </div>
         <% if game.location.present? %>
-          <div class="mt-2 text-sm text-gray-500">📍 <%= game.location %></div>
+          <div class="mt-2 text-sm text-gray-500 dark:text-gray-400">📍 <%= game.location %></div>
         <% end %>
       <% end %>
     <% end %>

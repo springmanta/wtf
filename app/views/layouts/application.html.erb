@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html data-controller="theme">
   <head>
     <title><%= content_for(:title) || "Wednesday Football App" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -7,6 +7,14 @@
     <meta name="mobile-web-app-capable" content="yes">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
+
+    <script>
+      (function () {
+        var theme = localStorage.getItem("theme");
+        if (!theme) theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        if (theme === "dark") document.documentElement.classList.add("dark");
+      })();
+    </script>
 
     <%= yield :head %>
 
@@ -22,18 +30,23 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body class="bg-gray-50 text-gray-900">
-    <header class="bg-emerald-700 text-white shadow">
+  <body class="bg-gray-50 text-gray-900 dark:bg-gray-950 dark:text-gray-100">
+    <header class="bg-emerald-700 text-white shadow dark:bg-emerald-900">
       <nav class="container mx-auto px-5 py-4 flex items-center gap-6">
         <%= link_to "⚽ Wednesday Football", root_path, class: "text-lg font-bold" %>
         <%= link_to "Games", games_path, class: "hover:underline" %>
         <%= link_to "Players", players_path, class: "hover:underline" %>
+        <button type="button" data-action="theme#toggle"
+                class="ml-auto rounded-md px-2 py-1 text-lg hover:bg-emerald-800/50 dark:hover:bg-emerald-950/50"
+                aria-label="Toggle dark mode">
+          <span data-theme-target="icon">🌙</span>
+        </button>
       </nav>
     </header>
 
     <main class="container mx-auto mt-8 px-5 pb-16">
       <% flash.each do |type, message| %>
-        <div class="mb-4 rounded-md px-4 py-3 text-sm <%= type == "notice" ? "bg-emerald-100 text-emerald-800" : "bg-red-100 text-red-800" %>">
+        <div class="mb-4 rounded-md px-4 py-3 text-sm <%= type == "notice" ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-100" : "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-100" %>">
           <%= message %>
         </div>
       <% end %>
