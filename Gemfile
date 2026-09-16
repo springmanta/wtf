@@ -6,8 +6,10 @@ gem "rails", "~> 8.0.5", ">= 8.0.5.1"
 gem "propshaft"
 # Pin below 3.0: json 3.x dropped a keyword ActiveSupport's encoder still passes, breaking session cookies
 gem "json", "~> 2.9"
-# Use sqlite3 as the database for Active Record
+# Use sqlite3 for cache/queue/cable in every environment, and for Active Record in development/test
 gem "sqlite3", ">= 2.1"
+# Use Postgres for Active Record in production
+gem "pg"
 # Use the Puma web server [https://github.com/puma/puma]
 gem "puma", ">= 5.0"
 # Use JavaScript with ESM import maps [https://github.com/rails/importmap-rails]
