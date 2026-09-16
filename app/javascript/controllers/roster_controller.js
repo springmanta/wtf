@@ -9,11 +9,17 @@ export default class extends Controller {
     "benchZone",
     "teamOneZone",
     "teamTwoZone",
+    "teamOneTopRow",
+    "teamOneBottomRow",
+    "teamTwoTopRow",
+    "teamTwoBottomRow",
     "teamOneCount",
     "teamTwoCount"
   ]
 
   connect() {
+    this.redistributeRows("teamOne")
+    this.redistributeRows("teamTwo")
     this.updateCounts()
     // Stable references so add/removeEventListener always agree on identity,
     // and a window-level safety net in case a card's own pointerup never fires
@@ -109,8 +115,12 @@ export default class extends Controller {
   }
 
   moveCard(card, zone) {
-    const target = { bench: this.benchZoneTarget, teamOne: this.teamOneZoneTarget, teamTwo: this.teamTwoZoneTarget }[zone]
-    target.appendChild(card)
+    if (zone === "bench") {
+      this.benchZoneTarget.appendChild(card)
+    } else {
+      const bottomRow = zone === "teamOne" ? this.teamOneBottomRowTarget : this.teamTwoBottomRowTarget
+      bottomRow.appendChild(card)
+    }
     card.dataset.zone = zone
     card.querySelector('[data-role="team-field"]').value = ZONE_TEAM[zone]
 
@@ -118,7 +128,25 @@ export default class extends Controller {
     stepper.hidden = zone === "bench"
     if (zone === "bench") this.setGoals(card, 0)
 
+    this.redistributeRows("teamOne")
+    this.redistributeRows("teamTwo")
     this.updateCounts()
+  }
+
+  // Splits a team's cards across its two rows (top row gets the smaller
+  // half) instead of leaving row breaks to the browser's flex-wrap, which
+  // packs as many cards as fit the container width per row rather than a
+  // deliberate split.
+  redistributeRows(zone) {
+    const topRow = zone === "teamOne" ? this.teamOneTopRowTarget : this.teamTwoTopRowTarget
+    const bottomRow = zone === "teamOne" ? this.teamOneBottomRowTarget : this.teamTwoBottomRowTarget
+    const cards = [...topRow.children, ...bottomRow.children]
+    const topCount = Math.floor(cards.length / 2)
+
+    cards.forEach((card, index) => {
+      const row = index < topCount ? topRow : bottomRow
+      row.appendChild(card)
+    })
   }
 
   incrementGoals(event) {

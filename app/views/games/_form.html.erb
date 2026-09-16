@@ -73,10 +73,13 @@
               <span><span data-roster-target="teamOneCount">0</span>/5</span>
             </div>
             <div class="pointer-events-none absolute left-1/2 top-0 h-8 w-28 -translate-x-1/2 border-2 border-t-0 border-white/30"></div>
-            <div data-roster-target="teamOneZone" class="relative z-10 flex flex-1 flex-wrap content-center items-center justify-center gap-3">
-              <%= form.fields_for :appearances, team_one_appearances do |appearance_form| %>
-                <%= render "appearance_card", f: appearance_form %>
-              <% end %>
+            <div data-roster-target="teamOneZone" class="relative z-10 flex flex-1 flex-col justify-center gap-3">
+              <div data-roster-target="teamOneTopRow" class="flex flex-wrap justify-center gap-3"></div>
+              <div data-roster-target="teamOneBottomRow" class="flex flex-wrap justify-center gap-3">
+                <%= form.fields_for :appearances, team_one_appearances do |appearance_form| %>
+                  <%= render "appearance_card", f: appearance_form %>
+                <% end %>
+              </div>
             </div>
           </div>
 
@@ -85,10 +88,13 @@
           </div>
 
           <div class="relative flex flex-col bg-emerald-700 p-4 dark:bg-emerald-900" style="min-height: 260px;">
-            <div data-roster-target="teamTwoZone" class="relative z-10 flex flex-1 flex-wrap content-center items-center justify-center gap-3">
-              <%= form.fields_for :appearances, team_two_appearances do |appearance_form| %>
-                <%= render "appearance_card", f: appearance_form %>
-              <% end %>
+            <div data-roster-target="teamTwoZone" class="relative z-10 flex flex-1 flex-col justify-center gap-3">
+              <div data-roster-target="teamTwoTopRow" class="flex flex-wrap justify-center gap-3"></div>
+              <div data-roster-target="teamTwoBottomRow" class="flex flex-wrap justify-center gap-3">
+                <%= form.fields_for :appearances, team_two_appearances do |appearance_form| %>
+                  <%= render "appearance_card", f: appearance_form %>
+                <% end %>
+              </div>
             </div>
             <div class="pointer-events-none absolute bottom-0 left-1/2 h-8 w-28 -translate-x-1/2 border-2 border-b-0 border-white/30"></div>
             <div class="relative z-10 mt-3 flex items-center justify-between text-xs font-semibold uppercase tracking-wide text-white/90">
