@@ -34,6 +34,22 @@ class Player < ApplicationRecord
     appearances.count
   end
 
+  def record
+    @record ||= appearances.each_with_object(Hash.new(0)) { |appearance, tally| tally[appearance.result] += 1 }
+  end
+
+  def wins
+    record["win"]
+  end
+
+  def draws
+    record["draw"]
+  end
+
+  def losses
+    record["loss"]
+  end
+
   def skills
     SKILLS.keys.index_with { |skill| public_send(skill) }
   end

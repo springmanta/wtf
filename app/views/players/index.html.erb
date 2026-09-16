@@ -34,6 +34,7 @@
             <th class="px-4 py-2 text-left font-medium text-gray-500 dark:text-gray-400"><%= sortable_column_link("games", "Games") %></th>
             <th class="px-4 py-2 text-left font-medium text-gray-500 dark:text-gray-400"><%= sortable_column_link("goals", "Goals") %></th>
             <th class="px-4 py-2 text-left font-medium text-gray-500 dark:text-gray-400"><%= sortable_column_link("overall", "Overall") %></th>
+            <th class="px-4 py-2 text-left font-medium text-gray-500 dark:text-gray-400">W-D-L</th>
             <th class="px-4 py-2 text-left font-medium text-gray-500 dark:text-gray-400">Status</th>
           </tr>
         </thead>
@@ -60,6 +61,9 @@
               <td class="px-4 py-2 text-gray-600 dark:text-gray-300"><%= player.games_played %></td>
               <td class="px-4 py-2 text-gray-600 dark:text-gray-300"><%= player.goals_scored %></td>
               <td class="px-4 py-2 text-gray-600 dark:text-gray-300"><%= player.overall_rating %></td>
+              <td class="px-4 py-2 whitespace-nowrap text-gray-600 dark:text-gray-300">
+                <span class="text-emerald-600 dark:text-emerald-400"><%= player.wins %></span>-<span class="text-gray-500 dark:text-gray-400"><%= player.draws %></span>-<span class="text-red-500 dark:text-red-400"><%= player.losses %></span>
+              </td>
               <td class="px-4 py-2">
                 <button type="submit" formaction="<%= toggle_active_player_path(player, sort: @sort, direction: @direction) %>"
                         class="group inline-flex items-center gap-2">

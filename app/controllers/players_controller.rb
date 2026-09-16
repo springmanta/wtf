@@ -7,7 +7,7 @@ class PlayersController < ApplicationController
     @sort = SORTABLE_COLUMNS.include?(params[:sort]) ? params[:sort] : "name"
     @direction = params[:direction] == "desc" ? "desc" : "asc"
 
-    players = Player.alphabetical.includes(:appearances).with_attached_photo
+    players = Player.alphabetical.includes(appearances: :game).with_attached_photo
     sorted = case @sort
     when "games" then players.sort_by(&:games_played)
     when "goals" then players.sort_by(&:goals_scored)
@@ -74,7 +74,7 @@ class PlayersController < ApplicationController
   private
 
   def set_player
-    @player = Player.find(params[:id])
+    @player = Player.includes(appearances: :game).find(params[:id])
   end
 
   def player_params
