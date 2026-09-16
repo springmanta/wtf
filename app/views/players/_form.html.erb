@@ -1,0 +1,27 @@
+<%= form_with(model: player, class: "space-y-6") do |form| %>
+  <% if player.errors.any? %>
+    <div class="rounded-md bg-red-50 p-4 text-sm text-red-700">
+      <h2 class="font-semibold"><%= pluralize(player.errors.count, "error") %> prevented this player from saving:</h2>
+      <ul class="mt-2 list-disc pl-5">
+        <% player.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :name, class: "block text-sm font-medium text-gray-700" %>
+    <%= form.text_field :name, class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm" %>
+  </div>
+
+  <div class="flex items-center gap-2">
+    <%= form.checkbox :active, class: "h-4 w-4 rounded border-gray-300" %>
+    <%= form.label :active, "Active (shows up when recording games)", class: "text-sm text-gray-700" %>
+  </div>
+
+  <div class="flex items-center gap-3">
+    <%= form.submit class: "rounded-md bg-emerald-700 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-800" %>
+    <%= link_to "Cancel", players_path, class: "text-sm text-gray-500 hover:underline" %>
+  </div>
+<% end %>
