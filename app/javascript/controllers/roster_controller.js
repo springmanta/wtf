@@ -15,11 +15,24 @@ export default class extends Controller {
 
   connect() {
     this.updateCounts()
+    // Stable references so add/removeEventListener always agree on identity,
+    // and a window-level safety net in case a card's own pointerup never fires
+    // (e.g. capture lost mid-drag) — without it a card can get stuck floating.
+    this.handleMove = this.handleMove.bind(this)
+    this.handleUp = this.handleUp.bind(this)
+    window.addEventListener("pointerup", this.handleUp)
+    window.addEventListener("pointercancel", this.handleUp)
+  }
+
+  disconnect() {
+    window.removeEventListener("pointerup", this.handleUp)
+    window.removeEventListener("pointercancel", this.handleUp)
   }
 
   startDrag(event) {
     if (event.pointerType === "mouse" && event.button !== 0) return
     if (event.target.closest('[data-role="goal-stepper"]')) return
+    if (this.draggingCard) return
 
     const card = event.currentTarget
     event.preventDefault()
@@ -33,34 +46,30 @@ export default class extends Controller {
     this.moved = false
 
     card.setPointerCapture(event.pointerId)
-
-    this.onMove = (e) => this.duringDrag(e)
-    this.onUp = (e) => this.endDrag(e)
-
-    card.addEventListener("pointermove", this.onMove)
-    card.addEventListener("pointerup", this.onUp)
-    card.addEventListener("pointercancel", this.onUp)
+    card.addEventListener("pointermove", this.handleMove)
   }
 
-  duringDrag(event) {
+  handleMove(event) {
+    if (!this.draggingCard) return
     const card = this.draggingCard
     if (!this.moved) {
       this.moved = true
       card.classList.add("shadow-xl", "scale-105")
       card.style.position = "fixed"
       card.style.zIndex = 50
-      card.style.pointerEvents = "none"
       card.style.width = `${this.startWidth}px`
     }
     card.style.left = `${event.clientX - this.offsetX}px`
     card.style.top = `${event.clientY - this.offsetY}px`
   }
 
-  endDrag(event) {
+  handleUp(event) {
+    if (!this.draggingCard) return
     const card = this.draggingCard
-    card.removeEventListener("pointermove", this.onMove)
-    card.removeEventListener("pointerup", this.onUp)
-    card.removeEventListener("pointercancel", this.onUp)
+    card.removeEventListener("pointermove", this.handleMove)
+    if (card.hasPointerCapture && card.hasPointerCapture(event.pointerId)) {
+      card.releasePointerCapture(event.pointerId)
+    }
 
     if (this.moved) {
       card.classList.remove("shadow-xl", "scale-105")
@@ -68,10 +77,9 @@ export default class extends Controller {
       card.style.left = ""
       card.style.top = ""
       card.style.zIndex = ""
-      card.style.pointerEvents = ""
       card.style.width = ""
 
-      const zone = this.zoneAt(event.clientX, event.clientY) || this.startZone
+      const zone = this.zoneAt(event.clientX, event.clientY, card) || this.startZone
       this.moveCard(card, zone)
     } else {
       this.cycleCard(card)
@@ -90,8 +98,9 @@ export default class extends Controller {
     this.moveCard(card, next)
   }
 
-  zoneAt(x, y) {
-    const el = document.elementFromPoint(x, y)
+  zoneAt(x, y, ignoreCard) {
+    const elements = document.elementsFromPoint(x, y)
+    const el = elements.find((candidate) => !ignoreCard.contains(candidate))
     if (!el) return null
     if (el.closest('[data-roster-target="teamOneZone"]')) return "teamOne"
     if (el.closest('[data-roster-target="teamTwoZone"]')) return "teamTwo"
