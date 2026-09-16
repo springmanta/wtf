@@ -35,7 +35,7 @@
   </div>
 
   <div class="flex items-center gap-0.5 text-xs" data-role="stat-stepper" <%= "hidden" if zone == "bench" %> title="Assists">
-    <span class="text-[10px]">🦶</span>
+    <span class="text-[10px]">👟</span>
     <button type="button" class="flex h-5 w-5 items-center justify-center rounded bg-gray-100 font-bold text-gray-600 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600" data-stat="assists" data-action="click->roster#decrementStat">−</button>
     <span class="w-3 tabular-nums" data-role="assists-display"><%= f.object.assists.to_i %></span>
     <button type="button" class="flex h-5 w-5 items-center justify-center rounded bg-gray-100 font-bold text-gray-600 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600" data-stat="assists" data-action="click->roster#incrementStat">+</button>
