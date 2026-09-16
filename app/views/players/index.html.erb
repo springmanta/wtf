@@ -12,9 +12,9 @@
     <table class="min-w-full divide-y divide-gray-200 text-sm dark:divide-gray-800">
       <thead class="bg-gray-50 dark:bg-gray-800">
         <tr>
-          <th class="px-4 py-2 text-left font-medium text-gray-500 dark:text-gray-400">Name</th>
-          <th class="px-4 py-2 text-left font-medium text-gray-500 dark:text-gray-400">Games</th>
-          <th class="px-4 py-2 text-left font-medium text-gray-500 dark:text-gray-400">Goals</th>
+          <th class="px-4 py-2 text-left font-medium text-gray-500 dark:text-gray-400"><%= sortable_column_link("name", "Name") %></th>
+          <th class="px-4 py-2 text-left font-medium text-gray-500 dark:text-gray-400"><%= sortable_column_link("games", "Games") %></th>
+          <th class="px-4 py-2 text-left font-medium text-gray-500 dark:text-gray-400"><%= sortable_column_link("goals", "Goals") %></th>
           <th class="px-4 py-2 text-left font-medium text-gray-500 dark:text-gray-400">Status</th>
         </tr>
       </thead>

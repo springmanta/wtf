@@ -1,8 +1,20 @@
 class PlayersController < ApplicationController
   before_action :set_player, only: %i[ show edit update destroy ]
 
+  SORTABLE_COLUMNS = %w[name games goals].freeze
+
   def index
-    @players = Player.alphabetical
+    @sort = SORTABLE_COLUMNS.include?(params[:sort]) ? params[:sort] : "name"
+    @direction = params[:direction] == "desc" ? "desc" : "asc"
+
+    players = Player.alphabetical.includes(:appearances)
+    sorted = case @sort
+    when "games" then players.sort_by(&:games_played)
+    when "goals" then players.sort_by(&:goals_scored)
+    else players.sort_by { |player| player.name.downcase }
+    end
+    sorted.reverse! if @direction == "desc"
+    @players = sorted
   end
 
   def show
