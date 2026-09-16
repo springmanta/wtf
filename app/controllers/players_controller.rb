@@ -1,5 +1,5 @@
 class PlayersController < ApplicationController
-  before_action :set_player, only: %i[ show edit update destroy ]
+  before_action :set_player, only: %i[ show edit update destroy toggle_active ]
 
   SORTABLE_COLUMNS = %w[name games goals overall].freeze
 
@@ -49,6 +49,12 @@ class PlayersController < ApplicationController
   def destroy
     @player.destroy!
     redirect_to players_path, notice: "Player was successfully deleted.", status: :see_other
+  end
+
+  def toggle_active
+    @player.update!(active: !@player.active)
+    redirect_to players_path(sort: params[:sort], direction: params[:direction]),
+      notice: "#{@player.name} marked #{@player.active? ? "active" : "inactive"}."
   end
 
   def bulk_update

@@ -21,6 +21,7 @@
     </div>
 
     <div class="overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-900">
+      <div class="overflow-x-auto">
       <table class="min-w-full divide-y divide-gray-200 text-sm dark:divide-gray-800">
         <thead class="bg-gray-50 dark:bg-gray-800">
           <tr>
@@ -60,16 +61,21 @@
               <td class="px-4 py-2 text-gray-600 dark:text-gray-300"><%= player.goals_scored %></td>
               <td class="px-4 py-2 text-gray-600 dark:text-gray-300"><%= player.overall_rating %></td>
               <td class="px-4 py-2">
-                <% if player.active %>
-                  <span class="rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-medium text-emerald-700 dark:bg-emerald-900 dark:text-emerald-300">Active</span>
-                <% else %>
-                  <span class="rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-500 dark:bg-gray-800 dark:text-gray-400">Inactive</span>
-                <% end %>
+                <button type="submit" formaction="<%= toggle_active_player_path(player, sort: @sort, direction: @direction) %>"
+                        class="group inline-flex items-center gap-2">
+                  <span class="relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors <%= player.active? ? "bg-emerald-600" : "bg-gray-300 dark:bg-gray-600" %>">
+                    <span class="inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform <%= player.active? ? "translate-x-6" : "translate-x-1" %>"></span>
+                  </span>
+                  <span class="text-xs font-medium text-gray-500 group-hover:text-gray-700 dark:text-gray-400 dark:group-hover:text-gray-200">
+                    <%= player.active? ? "Active" : "Inactive" %>
+                  </span>
+                </button>
               </td>
             </tr>
           <% end %>
         </tbody>
       </table>
+      </div>
     </div>
   <% end %>
 <% end %>

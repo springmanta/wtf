@@ -3,6 +3,9 @@ Rails.application.routes.draw do
     collection do
       patch :bulk_update
     end
+    member do
+      patch :toggle_active
+    end
   end
   resources :games
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
