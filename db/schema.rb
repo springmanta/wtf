@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_09_16_152013) do
+ActiveRecord::Schema[8.0].define(version: 2026_09_16_170716) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -46,6 +46,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_09_16_152013) do
     t.integer "goals", default: 0, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "assists", default: 0, null: false
     t.index ["game_id", "player_id"], name: "index_appearances_on_game_id_and_player_id", unique: true
     t.index ["game_id"], name: "index_appearances_on_game_id"
     t.index ["player_id"], name: "index_appearances_on_player_id"

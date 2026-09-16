@@ -2,6 +2,14 @@ import { Controller } from "@hotwired/stimulus"
 
 const ZONE_TEAM = { bench: "", teamOne: "team_one", teamTwo: "team_two" }
 const ZONE_ORDER = ["bench", "teamOne", "teamTwo"]
+const STATS = ["goals", "assists"]
+
+const ZONE_CARD_CLASSES = {
+  bench: ["bg-white/95", "dark:bg-gray-800/95"],
+  teamOne: ["bg-emerald-100", "dark:bg-emerald-900/60"],
+  teamTwo: ["bg-sky-100", "dark:bg-sky-900/60"]
+}
+const ALL_ZONE_CARD_CLASSES = Object.values(ZONE_CARD_CLASSES).flat()
 
 const RADAR_CENTER = 150
 const RADAR_RADIUS = 100
@@ -57,7 +65,7 @@ export default class extends Controller {
 
   startDrag(event) {
     if (event.pointerType === "mouse" && event.button !== 0) return
-    if (event.target.closest('[data-role="goal-stepper"]')) return
+    if (event.target.closest("[data-stat]")) return
     if (this.draggingCard) return
 
     const card = event.currentTarget
@@ -143,10 +151,13 @@ export default class extends Controller {
     }
     card.dataset.zone = zone
     card.querySelector('[data-role="team-field"]').value = ZONE_TEAM[zone]
+    card.classList.remove(...ALL_ZONE_CARD_CLASSES)
+    card.classList.add(...ZONE_CARD_CLASSES[zone])
 
-    const stepper = card.querySelector('[data-role="goal-stepper"]')
-    stepper.hidden = zone === "bench"
-    if (zone === "bench") this.setGoals(card, 0)
+    card.querySelectorAll('[data-role="stat-stepper"]').forEach((stepper) => {
+      stepper.hidden = zone === "bench"
+    })
+    if (zone === "bench") STATS.forEach((stat) => this.setStat(card, stat, 0))
 
     this.redistributeRows("teamOne")
     this.redistributeRows("teamTwo")
@@ -170,25 +181,27 @@ export default class extends Controller {
     })
   }
 
-  incrementGoals(event) {
+  incrementStat(event) {
     event.stopPropagation()
-    const card = event.currentTarget.closest('[data-roster-target="card"]')
-    this.setGoals(card, this.currentGoals(card) + 1)
+    const button = event.currentTarget
+    const card = button.closest('[data-roster-target="card"]')
+    this.setStat(card, button.dataset.stat, this.currentStat(card, button.dataset.stat) + 1)
   }
 
-  decrementGoals(event) {
+  decrementStat(event) {
     event.stopPropagation()
-    const card = event.currentTarget.closest('[data-roster-target="card"]')
-    this.setGoals(card, Math.max(0, this.currentGoals(card) - 1))
+    const button = event.currentTarget
+    const card = button.closest('[data-roster-target="card"]')
+    this.setStat(card, button.dataset.stat, Math.max(0, this.currentStat(card, button.dataset.stat) - 1))
   }
 
-  currentGoals(card) {
-    return parseInt(card.querySelector('[data-role="goals-field"]').value || "0", 10)
+  currentStat(card, stat) {
+    return parseInt(card.querySelector(`[data-role="${stat}-field"]`).value || "0", 10)
   }
 
-  setGoals(card, value) {
-    card.querySelector('[data-role="goals-field"]').value = value
-    card.querySelector('[data-role="goals-display"]').textContent = value
+  setStat(card, stat, value) {
+    card.querySelector(`[data-role="${stat}-field"]`).value = value
+    card.querySelector(`[data-role="${stat}-display"]`).textContent = value
   }
 
   updateCounts() {

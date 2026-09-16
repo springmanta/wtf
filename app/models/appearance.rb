@@ -6,6 +6,7 @@ class Appearance < ApplicationRecord
 
   validates :team, inclusion: { in: TEAMS }
   validates :goals, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
+  validates :assists, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
   validates :player_id, uniqueness: { scope: :game_id }
 
   def team_name

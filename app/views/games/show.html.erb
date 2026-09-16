@@ -37,8 +37,12 @@
         <% @game.team_one_appearances.each do |appearance| %>
           <li class="flex items-center justify-between px-3 py-2 text-sm">
             <span><%= appearance.player.name %></span>
-            <% if appearance.goals > 0 %>
-              <span class="text-gray-500 dark:text-gray-400">⚽ × <%= appearance.goals %></span>
+            <% if appearance.goals > 0 || appearance.assists > 0 %>
+              <span class="text-gray-500 dark:text-gray-400">
+                <% if appearance.goals > 0 %>⚽ × <%= appearance.goals %><% end %>
+                <% if appearance.goals > 0 && appearance.assists > 0 %> · <% end %>
+                <% if appearance.assists > 0 %>🅰️ × <%= appearance.assists %><% end %>
+              </span>
             <% end %>
           </li>
         <% end %>
@@ -54,8 +58,12 @@
         <% @game.team_two_appearances.each do |appearance| %>
           <li class="flex items-center justify-between px-3 py-2 text-sm">
             <span><%= appearance.player.name %></span>
-            <% if appearance.goals > 0 %>
-              <span class="text-gray-500 dark:text-gray-400">⚽ × <%= appearance.goals %></span>
+            <% if appearance.goals > 0 || appearance.assists > 0 %>
+              <span class="text-gray-500 dark:text-gray-400">
+                <% if appearance.goals > 0 %>⚽ × <%= appearance.goals %><% end %>
+                <% if appearance.goals > 0 && appearance.assists > 0 %> · <% end %>
+                <% if appearance.assists > 0 %>🅰️ × <%= appearance.assists %><% end %>
+              </span>
             <% end %>
           </li>
         <% end %>

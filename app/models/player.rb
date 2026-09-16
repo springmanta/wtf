@@ -31,6 +31,10 @@ class Player < ApplicationRecord
     appearances.sum(:goals)
   end
 
+  def assists_recorded
+    appearances.sum(:assists)
+  end
+
   def games_played
     appearances.count
   end
