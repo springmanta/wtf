@@ -73,7 +73,7 @@
               <span><span data-roster-target="teamOneCount">0</span>/5</span>
             </div>
             <div class="pointer-events-none absolute left-1/2 top-0 h-8 w-28 -translate-x-1/2 border-2 border-t-0 border-white/30"></div>
-            <div data-roster-target="teamOneZone" class="relative z-10 flex flex-1 flex-col justify-center gap-3">
+            <div data-roster-target="teamOneZone" class="relative z-20 flex flex-1 flex-col justify-center gap-3">
               <div data-roster-target="teamOneTopRow" class="flex flex-wrap justify-center gap-3"></div>
               <div data-roster-target="teamOneBottomRow" class="flex flex-wrap justify-center gap-3">
                 <%= form.fields_for :appearances, team_one_appearances do |appearance_form| %>
@@ -83,12 +83,12 @@
             </div>
           </div>
 
-          <div class="relative z-20 h-1 bg-white/70 dark:bg-gray-900">
+          <div class="relative z-10 h-1 bg-white/70 dark:bg-gray-900">
             <div class="pointer-events-none absolute left-1/2 top-1/2 h-16 w-16 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-white/40"></div>
           </div>
 
           <div class="relative flex flex-col bg-emerald-700 p-4 dark:bg-emerald-900" style="min-height: 260px;">
-            <div data-roster-target="teamTwoZone" class="relative z-10 flex flex-1 flex-col justify-center gap-3">
+            <div data-roster-target="teamTwoZone" class="relative z-20 flex flex-1 flex-col justify-center gap-3">
               <div data-roster-target="teamTwoTopRow" class="flex flex-wrap justify-center gap-3"></div>
               <div data-roster-target="teamTwoBottomRow" class="flex flex-wrap justify-center gap-3">
                 <%= form.fields_for :appearances, team_two_appearances do |appearance_form| %>
