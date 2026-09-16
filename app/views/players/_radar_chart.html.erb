@@ -1,5 +1,5 @@
 <svg viewBox="0 0 300 300" class="mx-auto w-full max-w-xs">
   <%= render "shared/radar_grid", labels: Player::SKILLS.values %>
   <polygon points="<%= radar_polygon_points(player.skills.values.map(&:to_f)) %>"
-           fill="currentColor" class="text-emerald-500" fill-opacity="0.35" stroke="currentColor" stroke-width="2"/>
+           fill="currentColor" class="text-emerald-600 dark:text-emerald-400" fill-opacity="0.55" stroke="currentColor" stroke-width="3"/>
 </svg>
