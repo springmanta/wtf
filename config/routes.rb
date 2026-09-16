@@ -1,5 +1,9 @@
 Rails.application.routes.draw do
-  resources :players
+  resources :players do
+    collection do
+      patch :bulk_update
+    end
+  end
   resources :games
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 

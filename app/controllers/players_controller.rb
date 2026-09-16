@@ -50,6 +50,20 @@ class PlayersController < ApplicationController
     redirect_to players_path, notice: "Player was successfully deleted.", status: :see_other
   end
 
+  def bulk_update
+    player_ids = Array(params[:player_ids])
+
+    if player_ids.empty?
+      redirect_to players_path, alert: "Select at least one player first."
+      return
+    end
+
+    active = ActiveModel::Type::Boolean.new.cast(params[:active])
+    Player.where(id: player_ids).update_all(active: active, updated_at: Time.current)
+
+    redirect_to players_path, notice: "#{player_ids.size} #{"player".pluralize(player_ids.size)} marked #{active ? "active" : "inactive"}."
+  end
+
   private
 
   def set_player
