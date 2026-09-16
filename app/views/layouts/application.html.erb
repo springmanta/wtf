@@ -25,6 +25,10 @@
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png?v=2">
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
     <%# Includes all stylesheet files in app/assets/stylesheets %>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
@@ -33,7 +37,7 @@
   <body class="bg-gray-50 text-gray-900 dark:bg-gray-950 dark:text-gray-100">
     <header class="bg-emerald-700 text-white shadow dark:bg-emerald-900">
       <nav class="container mx-auto px-5 py-4 flex items-center gap-6">
-        <%= link_to root_path, class: "flex items-center gap-2 text-lg font-bold", title: "Wednesday's THE Fut" do %>
+        <%= link_to root_path, class: "flex items-center gap-2 font-display text-2xl tracking-wide", title: "Wednesday's THE Fut" do %>
           <%= image_tag "wtf-logo-small.png", class: "h-10 w-10 rounded-full", alt: "WTF" %>
           WTF
         <% end %>
