@@ -5,7 +5,7 @@ gem "rails", "~> 8.0.5", ">= 8.0.5.1"
 # The modern asset pipeline for Rails [https://github.com/rails/propshaft]
 gem "propshaft"
 # Pin below 3.0: json 3.x dropped a keyword ActiveSupport's encoder still passes, breaking session cookies
-gem "json", "~> 2.9"
+gem "json", "~> 3.0"
 # Use sqlite3 for cache/queue/cable in every environment, and for Active Record in development/test
 gem "sqlite3", ">= 2.1"
 # Use Postgres for Active Record in production
