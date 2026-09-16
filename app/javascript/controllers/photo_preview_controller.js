@@ -4,18 +4,19 @@ export default class extends Controller {
   static targets = ["input", "image", "placeholder"]
 
   update() {
-    const url = this.inputTarget.value.trim()
-    if (url) {
-      this.imageTarget.src = url
+    const file = this.inputTarget.files[0]
+    if (!file) {
+      this.reset()
+      return
+    }
+
+    const reader = new FileReader()
+    reader.onload = () => {
+      this.imageTarget.src = reader.result
       this.imageTarget.hidden = false
       this.placeholderTarget.hidden = true
-    } else {
-      this.reset()
     }
-  }
-
-  handleError() {
-    this.reset()
+    reader.readAsDataURL(file)
   }
 
   reset() {

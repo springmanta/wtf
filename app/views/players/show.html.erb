@@ -13,8 +13,8 @@
 <div class="rounded-xl border border-gray-200 bg-gradient-to-br from-white to-gray-50 p-6 shadow-md dark:border-gray-800 dark:from-gray-900 dark:to-gray-950">
   <div class="flex items-center gap-4">
     <div class="h-16 w-16 shrink-0 overflow-hidden rounded-full bg-gray-100 shadow-sm dark:bg-gray-800">
-      <% if @player.photo_url.present? %>
-        <%= image_tag @player.photo_url, class: "h-full w-full object-cover", alt: @player.name %>
+      <% if @player.photo.attached? %>
+        <%= image_tag @player.photo.variant(resize_to_fill: [128, 128]), class: "h-full w-full object-cover", alt: @player.name %>
       <% else %>
         <div class="flex h-full w-full items-center justify-center text-lg font-bold text-gray-400"><%= @player.initials %></div>
       <% end %>

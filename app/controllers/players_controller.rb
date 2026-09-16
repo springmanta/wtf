@@ -7,7 +7,7 @@ class PlayersController < ApplicationController
     @sort = SORTABLE_COLUMNS.include?(params[:sort]) ? params[:sort] : "name"
     @direction = params[:direction] == "desc" ? "desc" : "asc"
 
-    players = Player.alphabetical.includes(:appearances)
+    players = Player.alphabetical.includes(:appearances).with_attached_photo
     sorted = case @sort
     when "games" then players.sort_by(&:games_played)
     when "goals" then players.sort_by(&:goals_scored)
@@ -72,6 +72,6 @@ class PlayersController < ApplicationController
   end
 
   def player_params
-    params.require(:player).permit(:name, :active, :photo_url, *Player::SKILLS.keys)
+    params.require(:player).permit(:name, :active, :photo, *Player::SKILLS.keys)
   end
 end

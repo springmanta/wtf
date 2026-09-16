@@ -1,6 +1,7 @@
 class Player < ApplicationRecord
   has_many :appearances, dependent: :destroy
   has_many :games, through: :appearances
+  has_one_attached :photo
 
   SKILLS = {
     technique: "Technique",
@@ -13,8 +14,11 @@ class Player < ApplicationRecord
     teamwork: "Teamwork"
   }.freeze
 
+  ALLOWED_PHOTO_TYPES = %w[image/png image/jpeg image/webp].freeze
+  MAX_PHOTO_SIZE = 10.megabytes
+
   validates :name, presence: true, uniqueness: true
-  validates :photo_url, format: { with: %r{\Ahttps?://}i, message: "must be a URL starting with http:// or https://" }, allow_blank: true
+  validate :photo_type_and_size, if: -> { photo.attached? }
   SKILLS.each_key do |skill|
     validates skill, numericality: { only_integer: true, in: 1..10 }
   end
@@ -40,5 +44,16 @@ class Player < ApplicationRecord
 
   def initials
     name.split.map { |part| part[0] }.join.upcase.first(2)
+  end
+
+  private
+
+  def photo_type_and_size
+    unless ALLOWED_PHOTO_TYPES.include?(photo.content_type)
+      errors.add(:photo, "must be a PNG, JPEG, or WebP image")
+    end
+    if photo.byte_size > MAX_PHOTO_SIZE
+      errors.add(:photo, "must be smaller than #{MAX_PHOTO_SIZE / 1.megabyte}MB")
+    end
   end
 end

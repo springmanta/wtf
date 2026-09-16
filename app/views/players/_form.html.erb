@@ -1,4 +1,4 @@
-<%= form_with(model: player, class: "space-y-6 rounded-xl border border-gray-200 bg-gradient-to-br from-white to-gray-50 p-6 shadow-md dark:border-gray-800 dark:from-gray-900 dark:to-gray-950") do |form| %>
+<%= form_with(model: player, multipart: true, class: "space-y-6 rounded-xl border border-gray-200 bg-gradient-to-br from-white to-gray-50 p-6 shadow-md dark:border-gray-800 dark:from-gray-900 dark:to-gray-950") do |form| %>
   <% if player.errors.any? %>
     <div class="rounded-lg bg-red-50 p-4 text-sm text-red-700 dark:bg-red-950 dark:text-red-300">
       <h2 class="font-semibold"><%= pluralize(player.errors.count, "error") %> prevented this player from saving:</h2>
@@ -22,14 +22,18 @@
 
   <div data-controller="photo-preview" class="flex items-center gap-4">
     <div class="relative h-16 w-16 shrink-0 overflow-hidden rounded-full bg-gray-100 shadow-sm dark:bg-gray-800">
-      <img data-photo-preview-target="image" src="<%= player.photo_url %>" class="h-full w-full object-cover" <%= "hidden" if player.photo_url.blank? %> data-action="error->photo-preview#handleError">
-      <div data-photo-preview-target="placeholder" class="flex h-full w-full items-center justify-center text-sm font-bold text-gray-400" <%= "hidden" if player.photo_url.present? %>><%= player.persisted? ? player.initials : "?" %></div>
+      <% if player.photo.attached? %>
+        <%= image_tag player.photo.variant(resize_to_fill: [128, 128]), data: { photo_preview_target: "image" }, class: "h-full w-full object-cover" %>
+      <% else %>
+        <img data-photo-preview-target="image" class="h-full w-full object-cover" hidden>
+      <% end %>
+      <div data-photo-preview-target="placeholder" class="flex h-full w-full items-center justify-center text-sm font-bold text-gray-400" <%= "hidden" if player.photo.attached? %>><%= player.persisted? ? player.initials : "?" %></div>
     </div>
     <div class="flex-1">
-      <%= form.label :photo_url, "Photo URL", class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
-      <%= form.text_field :photo_url, placeholder: "https://...",
-            data: { photo_preview_target: "input", action: "input->photo-preview#update" },
-            class: "mt-1.5 block w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm shadow-sm transition focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/30 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100" %>
+      <%= form.label :photo, "Photo", class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+      <%= form.file_field :photo, accept: "image/png,image/jpeg,image/webp",
+            data: { photo_preview_target: "input", action: "change->photo-preview#update" },
+            class: "mt-1.5 block w-full text-sm text-gray-600 file:mr-3 file:rounded-lg file:border-0 file:bg-emerald-600 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:bg-emerald-700 dark:text-gray-300" %>
       <p class="mt-1 text-xs text-gray-400 dark:text-gray-500">Optional — used as their avatar on the pitch too.</p>
     </div>
   </div>

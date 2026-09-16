@@ -13,8 +13,8 @@
   <%= f.hidden_field :team, data: { role: "team-field" } %>
 
   <div class="h-8 w-8 overflow-hidden rounded-full bg-emerald-600 dark:bg-emerald-500">
-    <% if player.photo_url.present? %>
-      <%= image_tag player.photo_url, class: "h-full w-full object-cover", alt: player.name %>
+    <% if player.photo.attached? %>
+      <%= image_tag player.photo.variant(resize_to_fill: [64, 64]), class: "h-full w-full object-cover", alt: player.name %>
     <% else %>
       <div class="flex h-full w-full items-center justify-center text-xs font-bold text-white"><%= player.initials %></div>
     <% end %>

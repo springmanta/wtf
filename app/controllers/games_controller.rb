@@ -15,7 +15,7 @@ class GamesController < ApplicationController
 
   def edit
     existing_player_ids = @game.appearances.map(&:player_id)
-    Player.active.alphabetical.where.not(id: existing_player_ids).each do |player|
+    Player.active.alphabetical.with_attached_photo.where.not(id: existing_player_ids).each do |player|
       @game.appearances.build(player: player)
     end
   end
@@ -46,11 +46,11 @@ class GamesController < ApplicationController
   private
 
   def set_game
-    @game = Game.find(params[:id])
+    @game = Game.includes(appearances: { player: { photo_attachment: :blob } }).find(params[:id])
   end
 
   def build_blank_appearances(game)
-    Player.active.alphabetical.each do |player|
+    Player.active.alphabetical.with_attached_photo.each do |player|
       game.appearances.build(player: player)
     end
   end
