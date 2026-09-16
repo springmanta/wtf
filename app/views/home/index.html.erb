@@ -1,8 +1,8 @@
 <% content_for :title, "Welcome" %>
 
-<div class="flex min-h-[70vh] items-center justify-center">
+<div class="flex min-h-screen items-center justify-center px-5">
   <%= link_to games_path, class: "group flex flex-col items-center gap-4 text-center" do %>
-    <%= image_tag "wtf-logo.png", class: "w-56 sm:w-72 drop-shadow-xl transition-transform duration-200 group-hover:scale-105", alt: "WTF - Wednesday's THE Fut" %>
+    <%= image_tag "wtf-logo.png", class: "w-64 sm:w-96 drop-shadow-xl transition-transform duration-200 group-hover:scale-105", alt: "WTF - Wednesday's THE Fut" %>
     <span class="text-sm font-medium text-gray-500 transition-colors group-hover:text-emerald-600 dark:text-gray-400 dark:group-hover:text-emerald-400">
       Tap to see results →
     </span>
