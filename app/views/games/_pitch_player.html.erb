@@ -1,0 +1,19 @@
+<%
+  zone_bg = appearance.team == "team_one" ? "bg-emerald-100 dark:bg-emerald-600" : "bg-sky-100 dark:bg-sky-600"
+%>
+<%= link_to appearance.player, class: "flex w-20 shrink-0 flex-col items-center gap-1 rounded-lg #{zone_bg} px-2 py-2 text-center shadow transition hover:opacity-90" do %>
+  <div class="h-8 w-8 overflow-hidden rounded-full bg-emerald-600 dark:bg-emerald-500">
+    <% if appearance.player.photo.attached? %>
+      <%= image_tag appearance.player.photo.variant(resize_to_fill: [64, 64]), class: "h-full w-full object-cover", alt: appearance.player.name %>
+    <% else %>
+      <div class="flex h-full w-full items-center justify-center text-xs font-bold text-white"><%= appearance.player.initials %></div>
+    <% end %>
+  </div>
+  <div class="w-full truncate text-xs font-medium text-gray-800 dark:text-gray-100"><%= appearance.player.name %></div>
+  <% if appearance.goals > 0 || appearance.assists > 0 %>
+    <div class="flex items-center gap-1.5 text-[10px] font-semibold text-gray-700 dark:text-gray-100">
+      <% if appearance.goals > 0 %><span>⚽<%= appearance.goals %></span><% end %>
+      <% if appearance.assists > 0 %><span>👟<%= appearance.assists %></span><% end %>
+    </div>
+  <% end %>
+<% end %>

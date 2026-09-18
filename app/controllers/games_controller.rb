@@ -1,4 +1,5 @@
 class GamesController < ApplicationController
+  allow_unauthenticated_access only: %i[index show]
   before_action :set_game, only: %i[show edit update destroy]
 
   def index

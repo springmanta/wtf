@@ -2,12 +2,14 @@
 
 <div class="mb-6 flex items-center justify-between">
   <%= link_to "← All players", players_path, class: "text-sm text-emerald-700 hover:underline dark:text-emerald-400" %>
-  <div class="flex items-center gap-3">
-    <%= link_to "Edit", edit_player_path(@player), class: "text-sm text-gray-600 hover:underline dark:text-gray-300" %>
-    <%= button_to "Delete", @player, method: :delete,
-          class: "border-0 bg-transparent p-0 text-sm text-red-600 hover:underline dark:text-red-400",
-          form: { data: { turbo_confirm: "Delete this player?" } } %>
-  </div>
+  <% if authenticated? %>
+    <div class="flex items-center gap-3">
+      <%= link_to "Edit", edit_player_path(@player), class: "text-sm text-gray-600 hover:underline dark:text-gray-300" %>
+      <%= button_to "Delete", @player, method: :delete,
+            class: "border-0 bg-transparent p-0 text-sm text-red-600 hover:underline dark:text-red-400",
+            form: { data: { turbo_confirm: "Delete this player?" } } %>
+    </div>
+  <% end %>
 </div>
 
 <div class="rounded-xl border border-gray-200 bg-gradient-to-br from-white to-gray-50 p-6 shadow-md dark:border-gray-800 dark:from-gray-900 dark:to-gray-950">

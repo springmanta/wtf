@@ -1,4 +1,5 @@
 class PlayersController < ApplicationController
+  allow_unauthenticated_access only: %i[index show]
   before_action :set_player, only: %i[ show edit update destroy toggle_active ]
 
   SORTABLE_COLUMNS = %w[name games goals assists overall].freeze

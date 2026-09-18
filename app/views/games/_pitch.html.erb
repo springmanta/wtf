@@ -1,0 +1,53 @@
+<%
+  team_one_appearances = game.team_one_appearances
+  team_two_appearances = game.team_two_appearances
+  team_one_top = team_one_appearances.first(team_one_appearances.size / 2)
+  team_one_bottom = team_one_appearances.drop(team_one_appearances.size / 2)
+  team_two_top = team_two_appearances.first(team_two_appearances.size / 2)
+  team_two_bottom = team_two_appearances.drop(team_two_appearances.size / 2)
+%>
+<div class="relative mx-auto max-w-md overflow-hidden rounded-2xl border-4 border-white shadow-inner">
+  <div class="relative flex flex-col bg-emerald-500 p-4 dark:bg-emerald-900" style="min-height: 260px;">
+    <div class="relative z-10 mb-3 flex items-center justify-between text-xs font-semibold uppercase tracking-wide text-white/90">
+      <span><%= game.team_one_name %></span>
+      <span><%= team_one_appearances.size %>/5</span>
+    </div>
+    <div class="pointer-events-none absolute left-1/2 top-0 h-8 w-28 -translate-x-1/2 border-2 border-t-0 border-white/30"></div>
+    <div class="relative z-20 flex flex-1 flex-col justify-center gap-3">
+      <div class="flex flex-wrap justify-center gap-3">
+        <% team_one_top.each do |appearance| %>
+          <%= render "pitch_player", appearance: appearance %>
+        <% end %>
+      </div>
+      <div class="flex flex-wrap justify-center gap-3">
+        <% team_one_bottom.each do |appearance| %>
+          <%= render "pitch_player", appearance: appearance %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <div class="relative z-10 h-1 bg-white/80 dark:bg-white/25">
+    <div class="pointer-events-none absolute left-1/2 top-1/2 h-16 w-16 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-white/40"></div>
+  </div>
+
+  <div class="relative flex flex-col bg-emerald-600 p-4 dark:bg-emerald-950" style="min-height: 260px;">
+    <div class="relative z-20 flex flex-1 flex-col justify-center gap-3">
+      <div class="flex flex-wrap justify-center gap-3">
+        <% team_two_top.each do |appearance| %>
+          <%= render "pitch_player", appearance: appearance %>
+        <% end %>
+      </div>
+      <div class="flex flex-wrap justify-center gap-3">
+        <% team_two_bottom.each do |appearance| %>
+          <%= render "pitch_player", appearance: appearance %>
+        <% end %>
+      </div>
+    </div>
+    <div class="pointer-events-none absolute bottom-0 left-1/2 h-8 w-28 -translate-x-1/2 border-2 border-b-0 border-white/30"></div>
+    <div class="relative z-10 mt-3 flex items-center justify-between text-xs font-semibold uppercase tracking-wide text-white/90">
+      <span><%= game.team_two_name %></span>
+      <span><%= team_two_appearances.size %>/5</span>
+    </div>
+  </div>
+</div>

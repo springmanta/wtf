@@ -7,7 +7,9 @@
 <div class="relative z-10">
   <div class="flex items-center justify-between mb-6">
     <h1 class="text-2xl font-bold">Results</h1>
-    <%= link_to "Record a game", new_game_path, class: "rounded-md bg-emerald-700 text-white px-4 py-2 text-sm font-semibold hover:bg-emerald-800" %>
+    <% if authenticated? %>
+      <%= link_to "Record a game", new_game_path, class: "rounded-md bg-emerald-700 text-white px-4 py-2 text-sm font-semibold hover:bg-emerald-800" %>
+    <% end %>
   </div>
 
   <% if @games.empty? %>
