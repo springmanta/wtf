@@ -3,7 +3,7 @@ class Game < ApplicationRecord
   has_many :players, through: :appearances
 
   accepts_nested_attributes_for :appearances, allow_destroy: true,
-    reject_if: proc { |attrs| attrs["team"].blank? }
+    reject_if: proc { |attrs| attrs["id"].blank? && attrs["team"].blank? }
 
   validates :played_on, presence: true
   validates :team_one_name, presence: true

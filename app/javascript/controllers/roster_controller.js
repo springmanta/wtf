@@ -151,6 +151,7 @@ export default class extends Controller {
     }
     card.dataset.zone = zone
     card.querySelector('[data-role="team-field"]').value = ZONE_TEAM[zone]
+    card.querySelector('[data-role="destroy-field"]').value = zone === "bench" ? "1" : "0"
     card.classList.remove(...ALL_ZONE_CARD_CLASSES)
     card.classList.add(...ZONE_CARD_CLASSES[zone])
 
