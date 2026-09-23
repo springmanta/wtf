@@ -3,6 +3,7 @@ import { Controller } from "@hotwired/stimulus"
 const ZONE_TEAM = { bench: "", teamOne: "team_one", teamTwo: "team_two" }
 const ZONE_ORDER = ["bench", "teamOne", "teamTwo"]
 const STATS = ["goals", "assists"]
+const TEAM_SIZE_LIMIT = 5
 
 const ZONE_CARD_CLASSES = {
   bench: ["bg-white/95", "dark:bg-gray-800/95"],
@@ -41,7 +42,9 @@ export default class extends Controller {
     "teamOneCount",
     "teamTwoCount",
     "teamOneRadar",
-    "teamTwoRadar"
+    "teamTwoRadar",
+    "swapModal",
+    "swapModalList"
   ]
 
   connect() {
@@ -114,7 +117,7 @@ export default class extends Controller {
       card.style.width = ""
 
       const zone = this.zoneAt(event.clientX, event.clientY, card) || this.startZone
-      this.moveCard(card, zone)
+      this.moveOrRequestSwap(card, zone)
     } else {
       this.cycleCard(card)
     }
@@ -129,7 +132,63 @@ export default class extends Controller {
 
   cycleCard(card) {
     const next = ZONE_ORDER[(ZONE_ORDER.indexOf(card.dataset.zone) + 1) % ZONE_ORDER.length]
-    this.moveCard(card, next)
+    this.moveOrRequestSwap(card, next)
+  }
+
+  // A team is capped at TEAM_SIZE_LIMIT — moving a card into an already-full
+  // team asks which current player to bench first, rather than silently
+  // letting the team grow past 5v5.
+  moveOrRequestSwap(card, zone) {
+    if (zone === card.dataset.zone) return
+    if (this.isFull(zone)) {
+      this.requestSwap(card, zone)
+    } else {
+      this.moveCard(card, zone)
+    }
+  }
+
+  isFull(zone) {
+    if (zone !== "teamOne" && zone !== "teamTwo") return false
+    const target = zone === "teamOne" ? this.teamOneZoneTarget : this.teamTwoZoneTarget
+    return target.querySelectorAll('[data-roster-target="card"]').length >= TEAM_SIZE_LIMIT
+  }
+
+  requestSwap(card, zone) {
+    this.pendingCard = card
+    this.pendingZone = zone
+
+    const target = zone === "teamOne" ? this.teamOneZoneTarget : this.teamTwoZoneTarget
+    this.swapModalListTarget.innerHTML = ""
+    target.querySelectorAll('[data-roster-target="card"]').forEach((existingCard) => {
+      const button = document.createElement("button")
+      button.type = "button"
+      button.className = "flex w-20 shrink-0 flex-col items-center gap-1 rounded-lg bg-gray-50 px-2 py-2 text-center shadow transition hover:bg-red-50 dark:bg-gray-800 dark:hover:bg-red-950"
+      button.appendChild(existingCard.querySelector(".h-8.w-8").cloneNode(true))
+      button.appendChild(existingCard.querySelector(".truncate").cloneNode(true))
+      button.addEventListener("click", () => this.completeSwap(existingCard))
+      this.swapModalListTarget.appendChild(button)
+    })
+
+    this.swapModalTarget.hidden = false
+  }
+
+  completeSwap(existingCard) {
+    const card = this.pendingCard
+    const zone = this.pendingZone
+    this.moveCard(existingCard, "bench")
+    this.moveCard(card, zone)
+    this.closeSwapModal()
+  }
+
+  cancelSwap() {
+    this.closeSwapModal()
+  }
+
+  closeSwapModal() {
+    this.swapModalTarget.hidden = true
+    this.swapModalListTarget.innerHTML = ""
+    this.pendingCard = null
+    this.pendingZone = null
   }
 
   zoneAt(x, y, ignoreCard) {
