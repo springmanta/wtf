@@ -1,0 +1,35 @@
+<% percentage_of = local_assigns[:percentage_of].to_i %>
+<div class="rounded-xl border border-gray-200 bg-gradient-to-br from-white to-gray-50 p-5 shadow-md dark:border-gray-800 dark:from-gray-900 dark:to-gray-950">
+  <h2 class="mb-4 flex items-center gap-2 text-xl"><span><%= emoji %></span><%= title %></h2>
+
+  <% if entries.empty? %>
+    <p class="text-sm text-gray-500 dark:text-gray-400">Nothing recorded yet.</p>
+  <% else %>
+    <ol class="space-y-1">
+      <% entries.each do |entry| %>
+        <li>
+          <%= link_to entry[:player], class: "flex items-center gap-3 rounded-lg px-2 py-2 transition hover:bg-gray-100 dark:hover:bg-gray-800" do %>
+            <span class="w-6 shrink-0 text-center text-sm font-bold text-gray-400 dark:text-gray-500"><%= rank_badge(entry[:rank]) %></span>
+
+            <div class="h-9 w-9 shrink-0 overflow-hidden rounded-full bg-gray-100 dark:bg-gray-800">
+              <% if entry[:player].photo.attached? %>
+                <%= image_tag entry[:player].photo.variant(resize_to_fill: [72, 72]), class: "h-full w-full object-cover", alt: entry[:player].name %>
+              <% else %>
+                <div class="flex h-full w-full items-center justify-center text-xs font-bold text-gray-400"><%= entry[:player].initials %></div>
+              <% end %>
+            </div>
+
+            <div class="min-w-0 flex-1">
+              <div class="truncate text-sm font-medium text-gray-800 dark:text-gray-100"><%= entry[:player].name %></div>
+              <% if percentage_of > 0 %>
+                <div class="text-xs text-gray-500 dark:text-gray-400"><%= (entry[:value] * 100.0 / percentage_of).round %>% of <%= pluralize(percentage_of, "game") %></div>
+              <% end %>
+            </div>
+
+            <span class="font-display text-2xl tracking-wide text-emerald-700 dark:text-emerald-400"><%= entry[:value] %></span>
+          <% end %>
+        </li>
+      <% end %>
+    </ol>
+  <% end %>
+</div>

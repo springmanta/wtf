@@ -26,6 +26,27 @@ class Player < ApplicationRecord
 
   scope :active, -> { where(active: true) }
   scope :alphabetical, -> { order(:name) }
+  # game_ids restricts which appearances count toward the totals (e.g. a single
+  # month) without turning the join into a filter — a player with zero
+  # appearances in that range still comes back with totals of 0 rather than
+  # being dropped, which a WHERE on appearances would do.
+  scope :with_appearance_totals, ->(game_ids: nil) {
+    join_condition = "appearances.player_id = players.id"
+    if game_ids
+      ids = game_ids.map(&:to_i)
+      ids = [ -1 ] if ids.empty?
+      join_condition += " AND appearances.game_id IN (#{ids.join(',')})"
+    end
+
+    joins("LEFT OUTER JOIN appearances ON #{join_condition}")
+      .group(:id)
+      .select(
+        "players.*",
+        "COALESCE(SUM(appearances.goals), 0) AS total_goals",
+        "COALESCE(SUM(appearances.assists), 0) AS total_assists",
+        "COUNT(appearances.id) AS total_appearances"
+      )
+  }
 
   def goals_scored
     appearances.sum(:goals)

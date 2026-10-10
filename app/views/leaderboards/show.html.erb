@@ -1,0 +1,26 @@
+<% content_for :title, "Leaderboard" %>
+
+<div class="mb-6 flex flex-wrap items-end justify-between gap-4">
+  <div>
+    <h1 class="text-2xl font-bold">Leaderboard</h1>
+    <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+      <%= @selected_month ? @selected_month.strftime("%B %Y") : "All time" %> · <%= pluralize(@total_games, "game") %> played
+    </p>
+  </div>
+
+  <%= form_with url: leaderboard_path, method: :get do %>
+    <%= select_tag :month,
+          options_for_select(
+            [ [ "All time", "" ] ] + @available_months.map { |month| [ month.strftime("%B %Y"), month.strftime("%Y-%m") ] },
+            @selected_month&.strftime("%Y-%m")
+          ),
+          onchange: "this.form.requestSubmit()",
+          class: "rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm shadow-sm focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/30 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100" %>
+  <% end %>
+</div>
+
+<div class="grid grid-cols-1 gap-5 lg:grid-cols-3">
+  <%= render "card", title: "Top scorer", emoji: "⚽", entries: @top_scorers %>
+  <%= render "card", title: "Top assists", emoji: "👟", entries: @top_assisters %>
+  <%= render "card", title: "Top assiduity", emoji: "📅", entries: @most_present, percentage_of: @total_games %>
+</div>
