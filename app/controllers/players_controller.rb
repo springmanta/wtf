@@ -21,6 +21,7 @@ class PlayersController < ApplicationController
   end
 
   def show
+    @back = back_link
   end
 
   def new
@@ -79,6 +80,32 @@ class PlayersController < ApplicationController
 
   def set_player
     @player = Player.includes(appearances: :game).find(params[:id])
+  end
+
+  # Players can be reached from several places (the roster, a game's pitch,
+  # the leaderboard) — send "back" to wherever that was instead of always
+  # defaulting to the players index.
+  def back_link
+    referer = same_origin_referer
+    default = { path: players_path, label: "All players" }
+    return default unless referer
+
+    case referer.path
+    when leaderboard_path
+      { path: "#{leaderboard_path}#{"?#{referer.query}" if referer.query}", label: "Leaderboard" }
+    when %r{\A/games/\d+\z}
+      { path: referer.path, label: "Back to game" }
+    else
+      default
+    end
+  end
+
+  def same_origin_referer
+    return nil if request.referer.blank?
+    uri = URI.parse(request.referer)
+    uri if uri.host == request.host
+  rescue URI::InvalidURIError
+    nil
   end
 
   def skills_changed?

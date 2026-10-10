@@ -1,7 +1,7 @@
 <% content_for :title, @player.name %>
 
 <div class="mb-6 flex items-center justify-between">
-  <%= link_to "← All players", players_path, class: "text-sm text-emerald-700 hover:underline dark:text-emerald-400" %>
+  <%= link_to "← #{@back[:label]}", @back[:path], class: "text-sm text-emerald-700 hover:underline dark:text-emerald-400" %>
   <% if authenticated? %>
     <div class="flex items-center gap-3">
       <%= link_to "Edit", edit_player_path(@player), class: "text-sm text-gray-600 hover:underline dark:text-gray-300" %>
