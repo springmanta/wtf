@@ -39,12 +39,18 @@ class Player < ApplicationRecord
     end
 
     joins("LEFT OUTER JOIN appearances ON #{join_condition}")
+      .joins("LEFT OUTER JOIN games ON games.id = appearances.game_id")
       .group(:id)
       .select(
         "players.*",
         "COALESCE(SUM(appearances.goals), 0) AS total_goals",
         "COALESCE(SUM(appearances.assists), 0) AS total_assists",
-        "COUNT(appearances.id) AS total_appearances"
+        "COUNT(appearances.id) AS total_appearances",
+        "COALESCE(SUM(CASE
+          WHEN appearances.team = 'team_one' AND games.team_one_score > games.team_two_score THEN 1
+          WHEN appearances.team = 'team_two' AND games.team_two_score > games.team_one_score THEN 1
+          ELSE 0
+        END), 0) AS total_wins"
       )
   }
 

@@ -16,6 +16,7 @@ class LeaderboardsController < ApplicationController
     @top_scorers = ranked(players, :total_goals)
     @top_assisters = ranked(players, :total_assists)
     @most_present = ranked(players, :total_appearances)
+    @top_winners = ranked(players, :total_wins)
   end
 
   private
