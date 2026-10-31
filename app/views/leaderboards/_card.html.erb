@@ -1,4 +1,5 @@
 <% percentage_of = local_assigns[:percentage_of].to_i %>
+<% subtitle_for = local_assigns[:subtitle_for] %>
 <div class="rounded-xl border border-gray-200 bg-gradient-to-br from-white to-gray-50 p-5 shadow-md dark:border-gray-800 dark:from-gray-900 dark:to-gray-950">
   <h2 class="mb-4 flex items-center gap-2 text-xl"><span><%= emoji %></span><%= title %></h2>
 
@@ -23,6 +24,8 @@
               <div class="truncate text-sm font-medium text-gray-800 dark:text-gray-100"><%= entry[:player].name %></div>
               <% if percentage_of > 0 %>
                 <div class="text-xs text-gray-500 dark:text-gray-400"><%= (entry[:value] * 100.0 / percentage_of).round %>% of <%= pluralize(percentage_of, "game") %></div>
+              <% elsif subtitle_for %>
+                <div class="text-xs text-gray-500 dark:text-gray-400"><%= subtitle_for.call(entry) %></div>
               <% end %>
             </div>
 

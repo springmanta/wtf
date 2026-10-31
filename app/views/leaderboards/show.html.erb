@@ -22,6 +22,7 @@
 <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4">
   <%= render "card", title: "Top scorer", emoji: "⚽", entries: @top_scorers %>
   <%= render "card", title: "Top assists", emoji: "👟", entries: @top_assisters %>
-  <%= render "card", title: "Most wins", emoji: "🏆", entries: @top_winners %>
+  <%= render "card", title: "Win-loss ratio", emoji: "⚖️", entries: @top_ratio,
+        subtitle_for: ->(entry) { "#{entry[:player].total_wins}W – #{entry[:player].total_losses}L" } %>
   <%= render "card", title: "Top assiduity", emoji: "📅", entries: @most_present, percentage_of: @total_games %>
 </div>
