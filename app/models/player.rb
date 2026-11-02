@@ -50,12 +50,7 @@ class Player < ApplicationRecord
           WHEN appearances.team = 'team_one' AND games.team_one_score > games.team_two_score THEN 1
           WHEN appearances.team = 'team_two' AND games.team_two_score > games.team_one_score THEN 1
           ELSE 0
-        END), 0) AS total_wins",
-        "COALESCE(SUM(CASE
-          WHEN appearances.team = 'team_one' AND games.team_one_score < games.team_two_score THEN 1
-          WHEN appearances.team = 'team_two' AND games.team_two_score < games.team_one_score THEN 1
-          ELSE 0
-        END), 0) AS total_losses"
+        END), 0) AS total_wins"
       )
   }
 
