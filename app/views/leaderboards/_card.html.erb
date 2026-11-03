@@ -1,11 +1,12 @@
 <% percentage_of = local_assigns[:percentage_of].to_i %>
 <% subtitle_for = local_assigns[:subtitle_for] %>
 <% visible_entries, hidden_entries = entries.first(5), entries.drop(5) %>
-<div data-controller="modal" class="rounded-xl border border-gray-200 bg-gradient-to-br from-white to-gray-50 p-5 shadow-md dark:border-gray-800 dark:from-gray-900 dark:to-gray-950">
+<% card_classes = "rounded-xl border border-gray-200 bg-gradient-to-br from-white to-gray-50 p-5 shadow-md transition-transform duration-200 dark:border-gray-800 dark:from-gray-900 dark:to-gray-950" %>
+<% card_classes += " hover:scale-[1.02]" if hidden_entries.any? %>
+<div data-controller="modal" class="<%= card_classes %>">
   <% if hidden_entries.any? %>
-    <button type="button" data-action="modal#open" class="mb-4 flex w-full items-center gap-2 text-left text-xl transition hover:text-emerald-700 dark:hover:text-emerald-400">
+    <button type="button" data-action="modal#open" class="mb-4 flex w-full cursor-pointer items-center gap-2 text-left text-xl transition hover:text-emerald-700 dark:hover:text-emerald-400">
       <span><%= emoji %></span><%= title %>
-      <span class="ml-auto text-xs font-medium text-gray-400 dark:text-gray-500">See all →</span>
     </button>
   <% else %>
     <h2 class="mb-4 flex items-center gap-2 text-xl"><span><%= emoji %></span><%= title %></h2>
@@ -22,7 +23,7 @@
 
     <% if hidden_entries.any? %>
       <dialog data-modal-target="dialog" data-action="click->modal#closeOnBackdrop"
-              class="m-auto w-full max-w-sm rounded-xl border border-gray-200 bg-white p-5 shadow-xl backdrop:bg-black/50 dark:border-gray-800 dark:bg-gray-900">
+              class="m-auto w-full max-w-sm rounded-xl border border-gray-200 bg-white p-5 text-gray-900 shadow-xl backdrop:bg-black/50 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-100">
         <div class="mb-4 flex items-center justify-between">
           <h2 class="flex items-center gap-2 text-xl"><span><%= emoji %></span><%= title %></h2>
           <button type="button" data-action="modal#close" aria-label="Close"
