@@ -6,6 +6,7 @@
     "teamOne" => "bg-emerald-100 dark:bg-emerald-600",
     "teamTwo" => "bg-sky-100 dark:bg-sky-600"
   }.fetch(zone)
+  balance_stats = @player_balance_stats[player.id] || { overall: player.overall_rating, output_rate: 0.0 }
 %>
 <div class="flex w-20 shrink-0 touch-none select-none flex-col items-center gap-1 rounded-lg <%= zone_bg %> px-2 py-2 text-center shadow cursor-grab active:cursor-grabbing"
      draggable="false"
@@ -13,6 +14,8 @@
      data-roster-target="card"
      data-zone="<%= zone %>"
      data-skills="<%= player.skills.values.to_json %>"
+     data-overall="<%= balance_stats[:overall] %>"
+     data-output-rate="<%= balance_stats[:output_rate] %>"
      data-action="pointerdown->roster#startDrag keydown.enter->roster#cycleOnKey keydown.space->roster#cycleOnKey">
   <%= f.hidden_field :player_id %>
   <%= f.hidden_field :team, data: { role: "team-field" } %>

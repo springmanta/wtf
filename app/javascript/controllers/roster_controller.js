@@ -29,6 +29,47 @@ function radarPolygonPoints(values) {
     .join(" ")
 }
 
+// Overall skill rating is already on a 0-10 scale; output rate (goals +
+// assists per appearance) is typically 0-2.5 for this group, so it's
+// scaled up to land in a comparable range — otherwise it would barely
+// move the balance at all next to the skill rating.
+const OUTPUT_RATE_SCALE = 3
+
+function playerStrength(player) {
+  return player.overall + player.outputRate * OUTPUT_RATE_SCALE
+}
+
+// Finds the two-team split (sizes as even as possible) whose total
+// strength is closest to equal, by brute-forcing every combination —
+// instant for a 5-a-side roster (a few hundred combinations at most).
+function bestBalancedSplit(players) {
+  const n = players.length
+  const teamSize = Math.floor(n / 2)
+  const total = players.reduce((sum, player) => sum + playerStrength(player), 0)
+
+  let best = null
+
+  function search(start, chosen, chosenStrength) {
+    if (chosen.length === teamSize) {
+      const diff = Math.abs(chosenStrength - (total - chosenStrength))
+      if (!best || diff < best.diff) best = { teamA: [...chosen], diff }
+      return
+    }
+    if (chosen.length + (n - start) < teamSize) return // not enough players left to fill the team
+
+    if (start < n) {
+      chosen.push(players[start])
+      search(start + 1, chosen, chosenStrength + playerStrength(players[start]))
+      chosen.pop()
+
+      search(start + 1, chosen, chosenStrength)
+    }
+  }
+
+  search(0, [], 0)
+  return new Set(best.teamA)
+}
+
 export default class extends Controller {
   static targets = [
     "card",
@@ -133,6 +174,26 @@ export default class extends Controller {
   cycleCard(card) {
     const next = ZONE_ORDER[(ZONE_ORDER.indexOf(card.dataset.zone) + 1) % ZONE_ORDER.length]
     this.moveOrRequestSwap(card, next)
+  }
+
+  // Rebalances whichever players are currently on the pitch (bench players
+  // are left alone) into the most evenly matched two-team split, based on
+  // skill rating and scoring output.
+  randomize() {
+    const cards = [
+      ...this.teamOneZoneTarget.querySelectorAll('[data-roster-target="card"]'),
+      ...this.teamTwoZoneTarget.querySelectorAll('[data-roster-target="card"]')
+    ]
+    if (cards.length < 2) return
+
+    const players = cards.map((card) => ({
+      card,
+      overall: parseFloat(card.dataset.overall) || 0,
+      outputRate: parseFloat(card.dataset.outputRate) || 0
+    }))
+
+    const teamA = bestBalancedSplit(players)
+    players.forEach((player) => this.moveCard(player.card, teamA.has(player) ? "teamOne" : "teamTwo"))
   }
 
   // A team is capped at TEAM_SIZE_LIMIT — moving a card into an already-full
