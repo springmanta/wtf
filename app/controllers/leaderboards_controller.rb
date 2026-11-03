@@ -1,8 +1,6 @@
 class LeaderboardsController < ApplicationController
   allow_unauthenticated_access
 
-  LEADERBOARD_SIZE = 5
-
   # A player must average at least this many appearances per month (across
   # the months in view) to qualify for the MVP ranking — otherwise one big
   # game could rank someone who barely shows up above a regular.
@@ -61,6 +59,8 @@ class LeaderboardsController < ApplicationController
   # Competition ranking, so equal values share a place and the next one skips
   # ahead (1, 1, 3) rather than reading as an arbitrary order between ties.
   # Pass either an attribute name or a block computing the value per player.
+  # Returns everyone with a non-zero value — the view decides how much of
+  # the list to show up front versus behind a "show more" toggle.
   def ranked(players, attribute = nil, &value_for)
     value_for ||= ->(player) { player.public_send(attribute).to_i }
 
@@ -68,7 +68,6 @@ class LeaderboardsController < ApplicationController
       .map { |player| [ player, value_for.call(player) ] }
       .reject { |_player, value| value.zero? }
       .sort_by { |player, value| [ -value, player.name.downcase ] }
-      .first(LEADERBOARD_SIZE)
 
     rank = 0
     previous_value = nil
