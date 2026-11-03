@@ -85,7 +85,9 @@ export default class extends Controller {
     "teamOneRadar",
     "teamTwoRadar",
     "swapModal",
-    "swapModalList"
+    "swapModalList",
+    "randomizeLogo",
+    "successModal"
   ]
 
   connect() {
@@ -178,7 +180,9 @@ export default class extends Controller {
 
   // Rebalances whichever players are currently on the pitch (bench players
   // are left alone) into the most evenly matched two-team split, based on
-  // skill rating and scoring output.
+  // skill rating and scoring output. The actual reassignment happens once
+  // the logo finishes spinning, so the reveal lands with the animation
+  // instead of the teams silently changing underneath it.
   randomize() {
     const cards = [
       ...this.teamOneZoneTarget.querySelectorAll('[data-roster-target="card"]'),
@@ -192,8 +196,35 @@ export default class extends Controller {
       outputRate: parseFloat(card.dataset.outputRate) || 0
     }))
 
-    const teamA = bestBalancedSplit(players)
-    players.forEach((player) => this.moveCard(player.card, teamA.has(player) ? "teamOne" : "teamTwo"))
+    this.spinLogoThen(() => {
+      const teamA = bestBalancedSplit(players)
+      players.forEach((player) => this.moveCard(player.card, teamA.has(player) ? "teamOne" : "teamTwo"))
+      if (this.hasSuccessModalTarget) this.successModalTarget.showModal()
+    })
+  }
+
+  spinLogoThen(callback) {
+    if (!this.hasRandomizeLogoTarget) {
+      callback()
+      return
+    }
+
+    const logo = this.randomizeLogoTarget
+    logo.style.transition = "transform 0.7s ease-out"
+    logo.style.transform = "rotate(720deg)"
+    logo.addEventListener("transitionend", () => {
+      logo.style.transition = "none"
+      logo.style.transform = "rotate(0deg)"
+      callback()
+    }, { once: true })
+  }
+
+  closeSuccessModal() {
+    this.successModalTarget.close()
+  }
+
+  closeSuccessModalOnBackdrop(event) {
+    if (event.target === this.successModalTarget) this.successModalTarget.close()
   }
 
   // A team is capped at TEAM_SIZE_LIMIT — moving a card into an already-full
